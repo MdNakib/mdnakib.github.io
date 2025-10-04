@@ -1,1 +1,1408 @@
-<h1> Currently Unavailable </h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MD Nakib - ML/AI Engineer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --secondary: #8b5cf6;
+            --accent: #ec4899;
+            --dark: #0f172a;
+            --darker: #020617;
+            --light: #f1f5f9;
+            --gray: #64748b;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--darker);
+            color: var(--light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.15;
+        }
+
+        .particle {
+            position: absolute;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            25% { transform: translateY(-100px) translateX(50px); }
+            50% { transform: translateY(-50px) translateX(100px); }
+            75% { transform: translateY(-150px) translateX(-50px); }
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+            transition: all 0.3s;
+        }
+
+        nav.scrolled {
+            padding: 0.5rem 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+            padding: 0.5rem 1rem;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transition: all 0.3s;
+            transform: translateX(-50%);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        section {
+            min-height: 100vh;
+            padding: 6rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        #hero {
+            position: relative;
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+        }
+
+        .hero-content {
+            text-align: center;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { filter: hue-rotate(0deg); }
+            50% { filter: hue-rotate(20deg); }
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            color: var(--gray);
+            margin-bottom: 2rem;
+        }
+
+        .hero-badges {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 2rem 0;
+        }
+
+        .badge {
+            background: rgba(99, 102, 241, 0.1);
+            border: 2px solid var(--primary);
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--light);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .badge:hover {
+            background: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .badge i {
+            color: var(--accent);
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(99, 102, 241, 0.6);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--light);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .social-links a {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(99, 102, 241, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.5rem;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .social-links a:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-5px) rotate(360deg);
+            border-color: var(--accent);
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 5vw, 3rem);
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 2px;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .about-text p {
+            font-size: 1.1rem;
+            color: var(--gray);
+            margin-bottom: 1rem;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(99, 102, 241, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            background: rgba(99, 102, 241, 0.1);
+            border-color: var(--primary);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            color: var(--gray);
+            margin-top: 0.5rem;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .project-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+        }
+
+        .project-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .project-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--light);
+        }
+
+        .project-card p {
+            color: var(--gray);
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .tag {
+            background: rgba(99, 102, 241, 0.2);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--light);
+        }
+
+        .certifications-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .cert-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
+            border-radius: 20px;
+            padding: 2rem;
+            border: 2px solid rgba(99, 102, 241, 0.2);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .cert-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s;
+        }
+
+        .cert-card:hover::before {
+            left: 100%;
+        }
+
+        .cert-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+        }
+
+        .cert-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .cert-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: var(--light);
+        }
+
+        .cert-issuer {
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .cert-placeholder {
+            width: 100%;
+            height: 200px;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 1rem 0;
+            border: 2px dashed rgba(99, 102, 241, 0.3);
+            transition: all 0.3s;
+        }
+
+        .cert-placeholder:hover {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: var(--primary);
+        }
+
+        .cert-placeholder i {
+            font-size: 3rem;
+            color: var(--gray);
+        }
+
+        .experience-timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary), var(--accent));
+        }
+
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 4rem;
+            position: relative;
+        }
+
+        .timeline-content {
+            background: rgba(99, 102, 241, 0.05);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 2px solid rgba(99, 102, 241, 0.2);
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            grid-column: 1;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            grid-column: 2;
+        }
+
+        .timeline-content:hover {
+            transform: scale(1.05);
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+        }
+
+        .timeline-marker {
+            position: absolute;
+            left: 50%;
+            top: 2rem;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 50%;
+            border: 4px solid var(--darker);
+            z-index: 10;
+        }
+
+        .timeline-year {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-content h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-content h4 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .timeline-content p {
+            color: var(--gray);
+            line-height: 1.8;
+        }
+
+        .writings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .writing-card {
+            background: rgba(99, 102, 241, 0.05);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 2px solid rgba(99, 102, 241, 0.2);
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .writing-card::before {
+            content: '"';
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            font-size: 4rem;
+            color: rgba(99, 102, 241, 0.2);
+            font-family: Georgia, serif;
+        }
+
+        .writing-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+        }
+
+        .writing-meta {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .writing-newspaper {
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .writing-date {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .writing-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--light);
+            padding-top: 1rem;
+        }
+
+        .writing-card p {
+            color: var(--gray);
+            line-height: 1.8;
+        }
+
+        .contact-content {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: rgba(99, 102, 241, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            transition: all 0.3s;
+        }
+
+        .contact-item:hover {
+            transform: translateX(10px);
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .contact-details {
+            text-align: left;
+        }
+
+        .contact-details h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .contact-details a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .contact-details a:hover {
+            color: var(--primary);
+        }
+
+        footer {
+            background: var(--darker);
+            padding: 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        footer p {
+            color: var(--gray);
+        }
+
+        @media (max-width: 768px) {
+            .timeline-line {
+                left: 0;
+            }
+
+            .timeline-item {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline-item:nth-child(odd) .timeline-content,
+            .timeline-item:nth-child(even) .timeline-content {
+                grid-column: 1;
+            }
+
+            .timeline-marker {
+                left: 0;
+            }
+
+            section {
+                padding: 4rem 1rem;
+            }
+
+            nav ul {
+                gap: 1rem;
+            }
+
+            nav a {
+                padding: 0.3rem 0.7rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease-out;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-20px); }
+            60% { transform: translateX(-50%) translateY(-10px); }
+        }
+
+        .scroll-indicator i {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="background-animation" id="particles"></div>
+
+    <nav id="navbar">
+        <ul>
+            <li><a href="#hero">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#certifications">Certifications</a></li>
+            <li><a href="#experience">Experience</a></li>
+            <li><a href="#writings">Publications</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <section id="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">MD Nakib</h1>
+                <p class="hero-subtitle">ML/AI Engineer | Computer Vision Researcher</p>
+                <div class="hero-badges">
+                    <div class="badge">
+                        <i class="fas fa-trophy"></i>
+                        National Talent - Secondary (CS & Math)
+                    </div>
+                    <div class="badge">
+                        <i class="fas fa-graduation-cap"></i>
+                        BUET EEE Student
+                    </div>
+                    <div class="badge">
+                        <i class="fas fa-medal"></i>
+                        Codeforces Specialist
+                    </div>
+                </div>
+                <p style="color: var(--gray); max-width: 700px; margin: 1rem auto;">
+                    Specialized in Generative AI, Computer Vision & Deep Learning | 4+ Professional Certifications from DeepLearning.AI | Active Researcher in Medical Image Processing & Deepfake Detection
+                </p>
+                <div class="cta-buttons">
+                    <a href="#projects" class="btn btn-primary">
+                        <i class="fas fa-rocket"></i> View Projects
+                    </a>
+                    <a href="#certifications" class="btn btn-secondary">
+                        <i class="fas fa-certificate"></i> Certifications
+                    </a>
+                </div>
+                <div class="social-links">
+                    <a href="https://linkedin.com/in/mdnakib025" target="_blank" title="LinkedIn">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="mailto:mdnakib025@gmail.com" title="Email">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                    <a href="https://github.com/mdnakib025" target="_blank" title="GitHub">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="https://codeforces.com" target="_blank" title="Codeforces">
+                        <i class="fas fa-code"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="container">
+            <h2 class="section-title fade-in">About Me</h2>
+            <div class="about-content">
+                <div class="about-text fade-in">
+                    <p>
+                        I'm a passionate ML/AI Engineer and researcher, currently pursuing B.Sc. in Electrical and Electronic 
+                        Engineering at Bangladesh University of Engineering and Technology (BUET), majoring in Communication 
+                        and Signal Processing.
+                    </p>
+                    <p>
+                        Recognized as a <strong>National Talent - Secondary in Computer Science and Mathematics</strong>, 
+                        I have built a strong foundation in computational thinking and problem-solving. My expertise spans 
+                        Generative AI, Computer Vision, Medical Image Processing, and Deep Learning.
+                    </p>
+                    <p>
+                        With <strong>4 specialized certifications from DeepLearning.AI</strong> (Coursera) including Machine Learning, 
+                        NLP, Deep Learning, and GANs, I bring theoretical knowledge and practical implementation skills to cutting-edge 
+                        AI research and development.
+                    </p>
+                    <p>
+                        As the Treasurer of IEEE Signal Processing Society BUET Student Branch, I actively promote research 
+                        and foster collaboration in ML/AI and signal processing domains.
+                    </p>
+                </div>
+                <div class="stats fade-in">
+                    <div class="stat-card">
+                        <div class="stat-number">4+</div>
+                        <div class="stat-label">AI/ML Certifications</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">5+</div>
+                        <div class="stat-label">Research Projects</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">3+</div>
+                        <div class="stat-label">Years Experience</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">National</div>
+                        <div class="stat-label">Talent Awardee</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects">
+        <div class="container">
+            <h2 class="section-title fade-in">Research & Projects</h2>
+            <div class="projects-grid">
+                <div class="project-card fade-in">
+                    <div class="project-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>Signal Processing Research</h3>
+                    <p>
+                        Advanced research in random signal processing and analysis, focusing on applications in communication 
+                        systems and AI. Implementing machine learning algorithms for signal enhancement, noise reduction, and 
+                        feature extraction in complex communication channels.
+                    </p>
+                    <div class="project-tags">
+                        <span class="tag">Signal Processing</span>
+                        <span class="tag">Machine Learning</span>
+                        <span class="tag">Communication</span>
+                        <span class="tag">MATLAB</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="certifications">
+        <div class="container">
+            <h2 class="section-title fade-in">Professional Certifications</h2>
+            <p style="text-align: center; color: var(--gray); margin-bottom: 3rem; font-size: 1.1rem;">
+                Specialized certifications from <strong style="color: var(--primary);">DeepLearning.AI</strong> on Coursera
+            </p>
+            <div class="certifications-grid">
+                <div class="cert-card fade-in">
+                    <div class="cert-icon">
+                        <i class="fas fa-award"></i>
+                    </div>
+                    <h3>Machine Learning Specialization</h3>
+                    <p class="cert-issuer">DeepLearning.AI - Coursera</p>
+                    <div class="cert-placeholder">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <p style="color: var(--gray); font-size: 0.9rem;">
+                        Comprehensive coverage of supervised and unsupervised learning, neural networks, and best practices
+                    </p>
+                </div>
+
+                <div class="cert-card fade-in">
+                    <div class="cert-icon">
+                        <i class="fas fa-award"></i>
+                    </div>
+                    <h3>Deep Learning Specialization</h3>
+                    <p class="cert-issuer">DeepLearning.AI - Coursera</p>
+                    <div class="cert-placeholder">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <p style="color: var(--gray); font-size: 0.9rem;">
+                        Advanced neural networks, CNNs, RNNs, optimization algorithms, and deep learning frameworks
+                    </p>
+                </div>
+
+                <div class="cert-card fade-in">
+                    <div class="cert-icon">
+                        <i class="fas fa-award"></i>
+                    </div>
+                    <h3>Natural Language Processing Specialization</h3>
+                    <p class="cert-issuer">DeepLearning.AI - Coursera</p>
+                    <div class="cert-placeholder">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <p style="color: var(--gray); font-size: 0.9rem;">
+                        NLP techniques, sentiment analysis, machine translation, and attention mechanisms
+                    </p>
+                </div>
+
+                <div class="cert-card fade-in">
+                    <div class="cert-icon">
+                        <i class="fas fa-award"></i>
+                    </div>
+                    <h3>Generative Adversarial Networks (GANs) Specialization</h3>
+                    <p class="cert-issuer">DeepLearning.AI - Coursera</p>
+                    <div class="cert-placeholder">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <p style="color: var(--gray); font-size: 0.9rem;">
+                        Advanced GAN architectures, StyleGAN, conditional generation, and image synthesis
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="experience">
+        <div class="container">
+            <h2 class="section-title fade-in">Experience & Achievements</h2>
+            <div class="experience-timeline">
+                <div class="timeline-line"></div>
+                
+                <div class="timeline-item fade-in">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-year">2025</div>
+                        <h3>Treasurer</h3>
+                        <h4>IEEE Signal Processing Society (SPS) BUET Student Branch</h4>
+                        <p>
+                            Leading financial management and helping organize speeches, seminars, and workshops to promote 
+                            research in machine learning, artificial intelligence, and signal processing. Fostering student 
+                            participation and creating opportunities for knowledge exchange in cutting-edge technologies.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item fade-in">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-year">2024 - Present</div>
+                        <h3>Undergraduate Researcher</h3>
+                        <h4>Medical Image Super Resolution - BUET</h4>
+                        <p>
+                            Conducting thesis research on efficient single image super-resolution methods for medical images. 
+                            Optimizing Generative AI models including GANs and Diffusion Models with focus on maintaining 
+                            fidelity and diversity. Working with TensorFlow/PyTorch for model implementation and training.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item fade-in">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-year">2022 - 2026</div>
+                        <h3>B.Sc. in Electrical & Electronic Engineering</h3>
+                        <h4>Bangladesh University of Engineering and Technology (BUET)</h4>
+                        <p>
+                            Major in Communication and Signal Processing. Consistent academic excellence with multiple 
+                            scholarships including Dean's List, University Merit, and Technical Scholarship every term. 
+                            Active participation in research projects and student organizations.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item fade-in">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-year">Secondary Education</div>
+                        <h3>National Talent Award</h3>
+                        <h4>Computer Science & Mathematics</h4>
+                        <p>
+                            Recognized as National Talent - Secondary of Bangladesh in Computer Science and Mathematics, 
+                            demonstrating exceptional aptitude in computational thinking, algorithmic problem-solving, and 
+                            mathematical reasoning from an early stage.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item fade-in">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-year">Ongoing</div>
+                        <h3>Competitive Programming</h3>
+                        <h4>Codeforces Specialist</h4>
+                        <p>
+                            Active competitive programmer with Specialist rating on Codeforces. Strong problem-solving skills 
+                            in algorithms and data structures, with proficiency in C/C++ for competitive programming and 
+                            algorithm optimization.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="writings">
+        <div class="container">
+            <h2 class="section-title fade-in">Publications & Writings</h2>
+            <p style="text-align: center; color: var(--gray); margin-bottom: 3rem; font-size: 1.1rem;">
+                Technical articles and insights on AI/ML published in newspapers and journals
+            </p>
+            <div class="writings-grid">
+                <div class="writing-card fade-in">
+                    <div class="writing-meta">
+                        <span class="writing-newspaper">
+                            <i class="fas fa-newspaper"></i> Publication Title
+                        </span>
+                        <span class="writing-date">
+                            <i class="far fa-calendar"></i> Date
+                        </span>
+                    </div>
+                    <h3>Article Title Here</h3>
+                    <p>
+                        Brief description or excerpt from your published article. This section showcases your technical 
+                        writing and thought leadership in AI/ML domains. Add your newspaper publications here.
+                    </p>
+                </div>
+
+                <div class="writing-card fade-in">
+                    <div class="writing-meta">
+                        <span class="writing-newspaper">
+                            <i class="fas fa-newspaper"></i> Publication Title
+                        </span>
+                        <span class="writing-date">
+                            <i class="far fa-calendar"></i> Date
+                        </span>
+                    </div>
+                    <h3>Article Title Here</h3>
+                    <p>
+                        Brief description or excerpt from your published article. Share your insights on emerging 
+                        technologies, research findings, or technical tutorials for broader audiences.
+                    </p>
+                </div>
+
+                <div class="writing-card fade-in">
+                    <div class="writing-meta">
+                        <span class="writing-newspaper">
+                            <i class="fas fa-newspaper"></i> Publication Title
+                        </span>
+                        <span class="writing-date">
+                            <i class="far fa-calendar"></i> Date
+                        </span>
+                    </div>
+                    <h3>Article Title Here</h3>
+                    <p>
+                        Brief description or excerpt from your published article. Demonstrate your ability to communicate 
+                        complex AI/ML concepts to diverse audiences through published work.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="container">
+            <h2 class="section-title fade-in">Get In Touch</h2>
+            <div class="contact-content fade-in">
+                <p style="color: var(--gray); margin-bottom: 2rem;">
+                    I'm always open to discussing research opportunities, collaborations, or interesting projects in 
+                    AI/ML and Computer Vision. Feel free to reach out!
+                </p>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Email</h4>
+                            <a href="mailto:mdnakib025@gmail.com">mdnakib025@gmail.com</a>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Phone</h4>
+                            <a href="tel:+8801682312181">+880 1682 312181</a>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Location</h4>
+                            <p style="color: var(--gray); margin: 0;">Dhaka, Bangladesh</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fab fa-linkedin-in"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>LinkedIn</h4>
+                            <a href="https://linkedin.com/in/mdnakib025" target="_blank">linkedin.com/in/mdnakib025</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 MD Nakib. All rights reserved. | Built with passion for AI/ML Research</p>
+    </footer>
+
+    <script>
+        // Animated background particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.width = Math.random() * 5 + 2 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        createParticles();
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Dynamic typing effect for hero subtitle
+        const subtitleText = "ML/AI Engineer | Computer Vision Researcher";
+        const subtitleElement = document.querySelector('.hero-subtitle');
+        let charIndex = 0;
+
+        function typeSubtitle() {
+            if (charIndex < subtitleText.length) {
+                subtitleElement.textContent = subtitleText.substring(0, charIndex + 1);
+                charIndex++;
+                setTimeout(typeSubtitle, 100);
+            }
+        }
+
+        // Start typing effect after a short delay
+        setTimeout(() => {
+            subtitleElement.textContent = '';
+            typeSubtitle();
+        }, 500);
+
+        // Add cursor blink effect
+        subtitleElement.style.borderRight = '2px solid var(--primary)';
+        setTimeout(() => {
+            subtitleElement.style.borderRight = 'none';
+        }, subtitleText.length * 100 + 1000);
+
+        // Particle interactions on mouse move
+        document.addEventListener('mousemove', (e) => {
+            const particles = document.querySelectorAll('.particle');
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+
+            particles.forEach(particle => {
+                const rect = particle.getBoundingClientRect();
+                const particleX = rect.left + rect.width / 2;
+                const particleY = rect.top + rect.height / 2;
+                
+                const distance = Math.sqrt(
+                    Math.pow(mouseX - particleX, 2) + Math.pow(mouseY - particleY, 2)
+                );
+
+                if (distance < 150) {
+                    const angle = Math.atan2(mouseY - particleY, mouseX - particleX);
+                    const force = (150 - distance) / 150;
+                    const moveX = Math.cos(angle) * force * 20;
+                    const moveY = Math.sin(angle) * force * 20;
+                    
+                    particle.style.transform = `translate(${-moveX}px, ${-moveY}px)`;
+                } else {
+                    particle.style.transform = 'translate(0, 0)';
+                }
+            });
+        });
+
+        // Add parallax effect to hero section
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('#hero');
+            if (hero && scrolled < window.innerHeight) {
+                hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+            }
+        });
+
+        // Animate stat numbers on scroll
+        const animateStats = () => {
+            const statNumbers = document.querySelectorAll('.stat-number');
+            statNumbers.forEach(stat => {
+                const text = stat.textContent;
+                const hasPlus = text.includes('+');
+                const numericValue = parseFloat(text.replace('+', ''));
+                
+                if (!isNaN(numericValue) && text !== 'National' && text !== 'Specialist') {
+                    let current = 0;
+                    const increment = numericValue / 50;
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= numericValue) {
+                            stat.textContent = numericValue + (hasPlus ? '+' : '');
+                            clearInterval(timer);
+                        } else {
+                            stat.textContent = Math.floor(current) + (hasPlus ? '+' : '');
+                        }
+                    }, 30);
+                }
+            });
+        };
+
+        // Trigger stat animation when stats section is visible
+        const statsSection = document.querySelector('.stats');
+        if (statsSection) {
+            const statsObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateStats();
+                        statsObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            statsObserver.observe(statsSection);
+        }
+
+        // Add hover effects
+        document.querySelectorAll('.btn, .project-card, .cert-card, .writing-card').forEach(element => {
+            element.addEventListener('mouseenter', function() {
+                this.style.transition = 'all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+            });
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowDown') {
+                window.scrollBy({ top: window.innerHeight, behavior: 'smooth' });
+            } else if (e.key === 'ArrowUp') {
+                window.scrollBy({ top: -window.innerHeight, behavior: 'smooth' });
+            }
+        });
+
+        // Add loading animation
+        window.addEventListener('load', () => {
+            document.body.style.opacity = '0';
+            setTimeout(() => {
+                document.body.style.transition = 'opacity 0.5s';
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+
+        console.log('%cWelcome to MD Nakib\'s Portfolio!', 'color: #6366f1; font-size: 20px; font-weight: bold;');
+        console.log('%cInterested in collaboration? Reach out at mdnakib025@gmail.com', 'color: #8b5cf6; font-size: 14px;');
+    </script>
+</body>
+</html>
+                    <div class="project-icon">
+                        <i class="fas fa-microscope"></i>
+                    </div>
+                    <h3>Medical Image Super Resolution</h3>
+                    <p>
+                        <strong>Undergraduate Thesis:</strong> Developing efficient methods for single image super-resolution 
+                        specifically optimized for medical images. Focus on maintaining high fidelity without sacrificing diversity 
+                        through advanced Generative Adversarial Networks (GANs) and Diffusion Models.
+                    </p>
+                    <div class="project-tags">
+                        <span class="tag">GANs</span>
+                        <span class="tag">Diffusion Models</span>
+                        <span class="tag">Medical Imaging</span>
+                        <span class="tag">Super Resolution</span>
+                    </div>
+                </div>
+
+                <div class="project-card fade-in">
+                    <div class="project-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>Deepfake Image Detection</h3>
+                    <p>
+                        Developed a robust, generalized model and innovative training methodology for detecting deepfake images 
+                        in real-world, unconstrained environments. Implemented state-of-the-art computer vision and deep learning 
+                        techniques to identify synthetic media with high accuracy across diverse datasets.
+                    </p>
+                    <div class="project-tags">
+                        <span class="tag">Computer Vision</span>
+                        <span class="tag">Deep Learning</span>
+                        <span class="tag">CNN</span>
+                        <span class="tag">Classification</span>
+                    </div>
+                </div>
+
+                <div class="project-card fade-in">
+                    <div class="project-icon">
+                        <i class="fas fa-drone"></i>
+                    </div>
+                    <h3>Drone Detection & Tracking</h3>
+                    <p>
+                        Developed an innovative multi-modal detection system for identifying and tracking tiny drones and birds 
+                        using visual and infrared channel fusion. Created efficient algorithms for RGB and IR channel fusion, 
+                        enabling robust object tracking in challenging conditions.
+                    </p>
+                    <div class="project-tags">
+                        <span class="tag">Object Detection</span>
+                        <span class="tag">Tracking</span>
+                        <span class="tag">Sensor Fusion</span>
+                        <span class="tag">Computer Vision</span>
+                    </div>
+                </div>
+
+                <div class="project-card fade-in">
