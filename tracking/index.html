@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vehicle Detection & Tracking</title>
-    <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.14.0/dist/ort.min.js"></script>
+    <title>AI Vehicle Detection & Tracking</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.11.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3"></script>
     <style>
         * {
             margin: 0;
@@ -22,7 +23,7 @@
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.98);
             border-radius: 20px;
             padding: 40px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
@@ -33,6 +34,10 @@
             color: #333;
             margin-bottom: 10px;
             font-size: 2.5em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .subtitle {
@@ -40,6 +45,17 @@
             color: #666;
             margin-bottom: 30px;
             font-size: 1.1em;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #00d084;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-left: 10px;
         }
 
         .demo-section {
@@ -59,6 +75,7 @@
         .demo-section p {
             margin-bottom: 20px;
             opacity: 0.95;
+            line-height: 1.6;
         }
 
         .upload-section {
@@ -68,6 +85,12 @@
             margin-bottom: 30px;
             border: 2px dashed #667eea;
             text-align: center;
+            transition: all 0.3s;
+        }
+
+        .upload-section:hover {
+            border-color: #764ba2;
+            background: #f8f9ff;
         }
 
         .upload-section h2 {
@@ -90,23 +113,34 @@
             transition: all 0.3s;
             margin: 10px;
             font-weight: 600;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
 
         .btn:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active:not(:disabled) {
+            transform: translateY(0px);
         }
 
         .btn:disabled {
             background: #ccc;
             cursor: not-allowed;
             transform: none;
+            box-shadow: none;
         }
 
         .btn-secondary {
             background: white;
             color: #667eea;
             border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #667eea;
+            color: white;
         }
 
         .video-container {
@@ -116,7 +150,7 @@
             border-radius: 12px;
             overflow: hidden;
             display: none;
-            max-width: 100%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
         .video-container.active {
@@ -137,7 +171,6 @@
             width: 100%;
             height: auto;
             display: block;
-            border-radius: 12px;
         }
 
         .stats {
@@ -159,11 +192,12 @@
             border-radius: 12px;
             text-align: center;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s;
+            transition: all 0.3s;
         }
 
         .stat-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
         }
 
         .stat-card h3 {
@@ -177,6 +211,7 @@
         .stat-card .number {
             font-size: 2.5em;
             font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         .status {
@@ -186,6 +221,18 @@
             border-radius: 8px;
             display: none;
             font-weight: 500;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .status.active {
@@ -195,21 +242,25 @@
         .status.info {
             background: #e3f2fd;
             color: #1976d2;
+            border-left: 4px solid #1976d2;
         }
 
         .status.success {
             background: #e8f5e9;
             color: #388e3c;
+            border-left: 4px solid #388e3c;
         }
 
         .status.error {
             background: #ffebee;
             color: #d32f2f;
+            border-left: 4px solid #d32f2f;
         }
 
         .status.warning {
             background: #fff3cd;
             color: #856404;
+            border-left: 4px solid #856404;
         }
 
         .loader {
@@ -233,22 +284,30 @@
         }
 
         .info-box {
-            background: #f8f9fa;
+            background: linear-gradient(to right, #f8f9fa, #ffffff);
             border-left: 4px solid #667eea;
             padding: 20px;
             margin: 20px 0;
-            border-radius: 4px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
 
         .info-box h3 {
             color: #667eea;
             margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .info-box ul {
             margin-left: 20px;
             color: #666;
             line-height: 1.8;
+        }
+
+        .info-box li {
+            margin: 8px 0;
         }
 
         .controls {
@@ -265,33 +324,67 @@
             position: absolute;
             top: 10px;
             right: 10px;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
+            background: rgba(0, 0, 0, 0.8);
+            color: #00ff00;
             padding: 8px 15px;
             border-radius: 20px;
             font-weight: bold;
             font-size: 14px;
+            font-family: 'Courier New', monospace;
+            border: 2px solid #00ff00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+        }
+
+        .detection-info {
+            position: absolute;
+            top: 50px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 12px;
+            max-width: 200px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #e0e0e0;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🚗 AI Vehicle Detection & Tracking</h1>
-        <p class="subtitle">Real-time vehicle detection powered by YOLOv8 ONNX</p>
+        <h1>🚗 AI Vehicle Detection & Tracking <span class="badge">LIVE</span></h1>
+        <p class="subtitle">Real-time vehicle detection powered by TensorFlow.js & COCO-SSD</p>
 
         <div class="demo-section">
             <h2>🎬 Try Live Demo</h2>
-            <p>Experience real-time vehicle detection on a sample traffic video</p>
-            <button class="btn" id="demoBtn" disabled>▶ Run Live Demo</button>
+            <p>Experience real-time AI-powered vehicle detection on your webcam or a sample video.<br>
+            All processing happens in your browser - completely private and secure!</p>
+            <button class="btn" id="webcamBtn" disabled>📹 Use Webcam</button>
+            <button class="btn" id="demoBtn" disabled>▶ Load Sample Video</button>
         </div>
 
         <div class="upload-section">
             <h2>📤 Upload Your Own Video</h2>
+            <p style="color: #666; margin-bottom: 15px;">Drag and drop or click to select</p>
             <input type="file" id="videoInput" accept="video/*">
             <button class="btn" onclick="document.getElementById('videoInput').click()">
-                Choose Video File
+                📁 Choose Video File
             </button>
-            <p style="margin-top: 15px; color: #666;">Supported: MP4, WebM, MOV</p>
+            <p style="margin-top: 15px; color: #999; font-size: 0.9em;">Supported: MP4, WebM, MOV, AVI</p>
         </div>
 
         <div class="status" id="status"></div>
@@ -315,7 +408,7 @@
                 <div class="number" id="motorcycleCount">0</div>
             </div>
             <div class="stat-card">
-                <h3>📊 Total</h3>
+                <h3>📊 Total Vehicles</h3>
                 <div class="number" id="totalCount">0</div>
             </div>
         </div>
@@ -324,77 +417,64 @@
             <div class="canvas-wrapper">
                 <canvas id="canvas"></canvas>
                 <div class="fps-counter" id="fpsCounter">FPS: 0</div>
+                <div class="detection-info" id="detectionInfo" style="display: none;">
+                    <div><strong>Current Frame:</strong></div>
+                    <div id="frameDetections">0 detections</div>
+                </div>
             </div>
         </div>
 
         <div class="controls" id="controls">
             <button class="btn btn-secondary" id="pauseBtn">⏸ Pause</button>
-            <button class="btn btn-secondary" id="resetBtn">🔄 Reset</button>
+            <button class="btn btn-secondary" id="stopBtn">⏹ Stop</button>
+            <button class="btn btn-secondary" id="resetBtn">🔄 Reset Counts</button>
         </div>
 
-        <video id="video" style="display: none;" muted playsinline crossorigin="anonymous"></video>
+        <video id="video" style="display: none;" playsinline></video>
 
         <div class="info-box">
-            <h3>ℹ️ System Features:</h3>
+            <h3>✨ System Features</h3>
             <ul>
-                <li><strong>YOLOv8n ONNX Model</strong> - Ultra-fast object detection optimized for web</li>
-                <li><strong>IoU-Based Tracking</strong> - Intelligent tracking prevents double counting</li>
-                <li><strong>Real-time Processing</strong> - Live detection with FPS counter</li>
-                <li><strong>Multi-Vehicle Support</strong> - Detects cars, buses, trucks, and motorcycles</li>
-                <li><strong>Browser-Based</strong> - All processing happens locally, no server needed</li>
-                <li><strong>Privacy First</strong> - Your videos never leave your device</li>
+                <li><strong>🤖 TensorFlow.js COCO-SSD</strong> - Pre-trained model running in your browser</li>
+                <li><strong>🎯 Smart Tracking</strong> - IoU-based tracking prevents double counting</li>
+                <li><strong>⚡ Real-time Processing</strong> - Live detection with performance monitoring</li>
+                <li><strong>🚗 Multi-Vehicle Support</strong> - Detects cars, buses, trucks, and motorcycles</li>
+                <li><strong>📹 Webcam Support</strong> - Test with your live camera feed</li>
+                <li><strong>🔒 100% Private</strong> - All processing happens locally, no data sent to servers</li>
+                <li><strong>🌐 GitHub Pages Ready</strong> - Works perfectly on static hosting!</li>
             </ul>
         </div>
 
-        <div class="info-box" style="border-left-color: #ff6b6b;">
-            <h3>⚠️ Setup Required:</h3>
+        <div class="info-box" style="border-left-color: #00d084;">
+            <h3>✅ Ready to Use!</h3>
             <ul>
-                <li><strong>Model File Needed:</strong> Download YOLOv8n ONNX model from <a href="https://github.com/ultralytics/assets/releases" target="_blank">Ultralytics GitHub</a></li>
-                <li><strong>Instructions:</strong> Look for "yolov8n.onnx" (smallest, fastest model ~6MB)</li>
-                <li><strong>Alternative:</strong> Host the model file and update MODEL_URL in the code</li>
-                <li><strong>Current Status:</strong> Using simulated detection until real model is loaded</li>
+                <li>✅ Model loads automatically from CDN (no setup needed)</li>
+                <li>✅ Works on any modern browser (Chrome, Firefox, Safari, Edge)</li>
+                <li>✅ No API keys or server required</li>
+                <li>✅ Perfect for GitHub Pages deployment</li>
             </ul>
         </div>
     </div>
 
     <script>
-        // YOLO class names (COCO dataset)
-        const YOLO_CLASSES = [
-            'person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus', 'train', 'truck', 'boat', 'traffic light',
-            'fire hydrant', 'stop sign', 'parking meter', 'bench', 'bird', 'cat', 'dog', 'horse', 'sheep', 'cow',
-            'elephant', 'bear', 'zebra', 'giraffe', 'backpack', 'umbrella', 'handbag', 'tie', 'suitcase', 'frisbee',
-            'skis', 'snowboard', 'sports ball', 'kite', 'baseball bat', 'baseball glove', 'skateboard', 'surfboard',
-            'tennis racket', 'bottle', 'wine glass', 'cup', 'fork', 'knife', 'spoon', 'bowl', 'banana', 'apple',
-            'sandwich', 'orange', 'broccoli', 'carrot', 'hot dog', 'pizza', 'donut', 'cake', 'chair', 'couch',
-            'potted plant', 'bed', 'dining table', 'toilet', 'tv', 'laptop', 'mouse', 'remote', 'keyboard',
-            'cell phone', 'microwave', 'oven', 'toaster', 'sink', 'refrigerator', 'book', 'clock', 'vase',
-            'scissors', 'teddy bear', 'hair drier', 'toothbrush'
-        ];
+        // Vehicle detection classes from COCO dataset
+        const VEHICLE_CLASSES = ['car', 'motorcycle', 'bus', 'truck'];
+        
+        // Tracking parameters
+        const IOU_THRESHOLD = 0.3;
+        const MAX_FRAMES_MISSING = 20;
+        const DETECTION_INTERVAL = 100; // ms between detections
 
-        const VEHICLE_CLASSES = {
-            2: 'car',
-            3: 'motorcycle', 
-            5: 'bus',
-            7: 'truck'
-        };
-
-        const INPUT_SIZE = 640;
-        const CONFIDENCE_THRESHOLD = 0.5;
-        const IOU_THRESHOLD = 0.45;
-        const NMS_THRESHOLD = 0.45;
-        const MAX_FRAMES_MISSING = 15;
-
-        // Model URL - You need to host your own YOLOv8 ONNX model
-        const MODEL_URL = 'yolov8n.onnx'; // Update this with your model path
-
-        let session = null;
+        let model = null;
         let videoElement = document.getElementById('video');
         let canvas = document.getElementById('canvas');
         let ctx = canvas.getContext('2d');
         let isProcessing = false;
         let isPaused = false;
         let animationId = null;
-        let modelLoaded = false;
+        let detectionTimeout = null;
+        let isWebcam = false;
+        let stream = null;
 
         // Tracking system
         let trackedVehicles = new Map();
@@ -406,9 +486,11 @@
             motorcycle: new Set()
         };
 
-        // FPS calculation
+        // Performance monitoring
         let lastFrameTime = Date.now();
         let fps = 0;
+        let frameCount = 0;
+        let lastFpsUpdate = Date.now();
 
         function showStatus(message, type) {
             const statusEl = document.getElementById('status');
@@ -421,49 +503,29 @@
         }
 
         async function loadModel() {
-            showStatus('🔄 Loading YOLOv8 model...', 'info');
+            showStatus('🔄 Loading AI model... Please wait.', 'info');
             showLoader(true);
             
             try {
-                session = await ort.InferenceSession.create(MODEL_URL, {
-                    executionProviders: ['wasm'],
-                    graphOptimizationLevel: 'all'
+                // Load COCO-SSD model from TensorFlow.js
+                model = await cocoSsd.load({
+                    base: 'mobilenet_v2' // Fast and accurate
                 });
                 
-                modelLoaded = true;
-                showStatus('✅ Model loaded successfully! Ready to detect vehicles.', 'success');
+                showStatus('✅ AI model loaded successfully! Ready to detect vehicles.', 'success');
                 showLoader(false);
+                
+                // Enable buttons
                 document.getElementById('demoBtn').disabled = false;
+                document.getElementById('webcamBtn').disabled = false;
                 
                 return true;
             } catch (error) {
                 console.error('Model loading error:', error);
-                showStatus('⚠️ Could not load ONNX model. Using fallback detection. See setup instructions below.', 'warning');
+                showStatus('❌ Failed to load model. Please refresh the page.', 'error');
                 showLoader(false);
-                document.getElementById('demoBtn').disabled = false;
-                modelLoaded = false;
                 return false;
             }
-        }
-
-        function preprocessImage(imageData) {
-            const { data, width, height } = imageData;
-            const input = new Float32Array(3 * INPUT_SIZE * INPUT_SIZE);
-            
-            // Resize and normalize
-            for (let c = 0; c < 3; c++) {
-                for (let y = 0; y < INPUT_SIZE; y++) {
-                    for (let x = 0; x < INPUT_SIZE; x++) {
-                        const srcX = Math.floor(x * width / INPUT_SIZE);
-                        const srcY = Math.floor(y * height / INPUT_SIZE);
-                        const srcIdx = (srcY * width + srcX) * 4;
-                        const dstIdx = c * INPUT_SIZE * INPUT_SIZE + y * INPUT_SIZE + x;
-                        input[dstIdx] = data[srcIdx + c] / 255.0;
-                    }
-                }
-            }
-            
-            return input;
         }
 
         function calculateIoU(box1, box2) {
@@ -480,72 +542,14 @@
             return union > 0 ? intersection / union : 0;
         }
 
-        function nonMaxSuppression(boxes, threshold) {
-            boxes.sort((a, b) => b.confidence - a.confidence);
-            const selected = [];
-
-            while (boxes.length > 0) {
-                const current = boxes.shift();
-                selected.push(current);
-
-                boxes = boxes.filter(box => {
-                    if (box.classId !== current.classId) return true;
-                    return calculateIoU(current, box) < threshold;
-                });
-            }
-
-            return selected;
-        }
-
-        function postprocessOutput(output, imgWidth, imgHeight) {
-            const boxes = [];
-            const [batchSize, dimensions, numBoxes] = output.dims;
-            const data = output.data;
-
-            const scaleX = imgWidth / INPUT_SIZE;
-            const scaleY = imgHeight / INPUT_SIZE;
-
-            for (let i = 0; i < numBoxes; i++) {
-                const offset = i * dimensions;
-                
-                const x = data[offset + 0];
-                const y = data[offset + 1];
-                const w = data[offset + 2];
-                const h = data[offset + 3];
-
-                let maxConf = 0;
-                let maxClass = -1;
-
-                for (let c = 4; c < dimensions; c++) {
-                    if (data[offset + c] > maxConf) {
-                        maxConf = data[offset + c];
-                        maxClass = c - 4;
-                    }
-                }
-
-                if (maxConf > CONFIDENCE_THRESHOLD && VEHICLE_CLASSES[maxClass]) {
-                    boxes.push({
-                        x: (x - w / 2) * scaleX,
-                        y: (y - h / 2) * scaleY,
-                        width: w * scaleX,
-                        height: h * scaleY,
-                        confidence: maxConf,
-                        classId: maxClass,
-                        type: VEHICLE_CLASSES[maxClass]
-                    });
-                }
-            }
-
-            return nonMaxSuppression(boxes, NMS_THRESHOLD);
-        }
-
         function trackVehicle(detection, vehicleType) {
             let bestMatch = null;
             let bestIoU = IOU_THRESHOLD;
 
+            // Find best matching existing track
             for (let [id, tracked] of trackedVehicles.entries()) {
                 if (tracked.type === vehicleType) {
-                    const iou = calculateIoU(detection, tracked.bbox);
+                    const iou = calculateIoU(detection.bbox, tracked.bbox);
                     if (iou > bestIoU) {
                         bestIoU = iou;
                         bestMatch = id;
@@ -554,14 +558,18 @@
             }
 
             if (bestMatch) {
-                trackedVehicles.get(bestMatch).bbox = detection;
+                // Update existing track
+                trackedVehicles.get(bestMatch).bbox = detection.bbox;
                 trackedVehicles.get(bestMatch).framesMissing = 0;
+                trackedVehicles.get(bestMatch).confidence = detection.score;
                 return bestMatch;
             } else {
+                // Create new track
                 const newId = nextId++;
                 trackedVehicles.set(newId, {
                     type: vehicleType,
-                    bbox: detection,
+                    bbox: detection.bbox,
+                    confidence: detection.score,
                     framesMissing: 0
                 });
                 vehicleCounts[vehicleType].add(newId);
@@ -570,6 +578,7 @@
         }
 
         function updateTracking() {
+            // Remove tracks that haven't been seen recently
             for (let [id, tracked] of trackedVehicles.entries()) {
                 tracked.framesMissing++;
                 if (tracked.framesMissing > MAX_FRAMES_MISSING) {
@@ -589,126 +598,106 @@
             document.getElementById('totalCount').textContent = total;
         }
 
-        async function detectVehiclesInFrame() {
-            if (!modelLoaded) {
-                // Fallback to simulated detection
-                return simulateDetection();
-            }
+        async function detectVehicles() {
+            if (!model || !isProcessing || isPaused) return;
 
             try {
-                // Create a temporary canvas for preprocessing
-                const tempCanvas = document.createElement('canvas');
-                tempCanvas.width = INPUT_SIZE;
-                tempCanvas.height = INPUT_SIZE;
-                const tempCtx = tempCanvas.getContext('2d');
+                // Run detection
+                const predictions = await model.detect(canvas);
                 
-                tempCtx.drawImage(videoElement, 0, 0, INPUT_SIZE, INPUT_SIZE);
-                const imageData = tempCtx.getImageData(0, 0, INPUT_SIZE, INPUT_SIZE);
-                
-                // Preprocess
-                const inputData = preprocessImage(imageData);
-                const inputTensor = new ort.Tensor('float32', inputData, [1, 3, INPUT_SIZE, INPUT_SIZE]);
-                
-                // Run inference
-                const feeds = { images: inputTensor };
-                const results = await session.run(feeds);
-                const output = results[Object.keys(results)[0]];
-                
-                // Postprocess
-                return postprocessOutput(output, videoElement.videoWidth, videoElement.videoHeight);
+                // Filter for vehicles only
+                const vehicleDetections = predictions.filter(pred => 
+                    VEHICLE_CLASSES.includes(pred.class)
+                );
+
+                // Update detection info
+                document.getElementById('frameDetections').textContent = 
+                    `${vehicleDetections.length} detection${vehicleDetections.length !== 1 ? 's' : ''}`;
+                document.getElementById('detectionInfo').style.display = 'block';
+
+                // Process each detection
+                vehicleDetections.forEach(detection => {
+                    const bbox = {
+                        x: detection.bbox[0],
+                        y: detection.bbox[1],
+                        width: detection.bbox[2],
+                        height: detection.bbox[3]
+                    };
+
+                    trackVehicle({
+                        bbox: bbox,
+                        score: detection.score
+                    }, detection.class);
+                });
+
+                updateTracking();
+                updateStats();
+
+                // Schedule next detection
+                if (isProcessing && !isPaused) {
+                    detectionTimeout = setTimeout(detectVehicles, DETECTION_INTERVAL);
+                }
             } catch (error) {
                 console.error('Detection error:', error);
-                return [];
             }
         }
 
-        function simulateDetection() {
-            // Fallback simulated detection
-            const detections = [];
-            const time = videoElement.currentTime;
-            const numVehicles = 2 + Math.floor(Math.random() * 2);
-            
-            for (let i = 0; i < numVehicles; i++) {
-                const vehicleTypes = ['car', 'bus', 'truck', 'motorcycle'];
-                const type = vehicleTypes[Math.floor(Math.random() * vehicleTypes.length)];
-                
-                const x = (canvas.width * 0.1) + ((time * 50 + i * 200) % (canvas.width * 0.8));
-                const y = canvas.height * 0.3 + Math.sin(time + i) * 100 + (i * 80);
-                const width = type === 'bus' || type === 'truck' ? 120 : 80;
-                const height = type === 'bus' || type === 'truck' ? 80 : 60;
-                
-                detections.push({
-                    type: type,
-                    x, y, width, height,
-                    confidence: 0.85 + Math.random() * 0.15,
-                    classId: Object.keys(VEHICLE_CLASSES).find(k => VEHICLE_CLASSES[k] === type)
-                });
-            }
-            
-            return detections;
-        }
+        function drawFrame() {
+            if (!isProcessing) return;
 
-        function drawDetections(detections) {
+            // Clear canvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw video frame
             ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
-            
-            detections.forEach(detection => {
-                const bbox = { x: detection.x, y: detection.y, width: detection.width, height: detection.height };
-                const vehicleId = trackVehicle(bbox, detection.type);
-                
-                const colors = {
-                    car: '#00ff00',
-                    bus: '#ff00ff',
-                    truck: '#00ffff',
-                    motorcycle: '#ffff00'
-                };
-                
-                ctx.strokeStyle = colors[detection.type] || '#00ff00';
-                ctx.lineWidth = 3;
-                ctx.strokeRect(detection.x, detection.y, detection.width, detection.height);
-                
-                const label = `${detection.type} #${vehicleId} (${(detection.confidence * 100).toFixed(0)}%)`;
-                ctx.fillStyle = ctx.strokeStyle;
-                ctx.font = 'bold 16px Arial';
-                
-                const textWidth = ctx.measureText(label).width;
-                ctx.fillRect(detection.x, detection.y - 25, textWidth + 10, 25);
-                
-                ctx.fillStyle = '#000';
-                ctx.fillText(label, detection.x + 5, detection.y - 7);
-            });
-        }
 
-        function updateFPS() {
-            const now = Date.now();
-            fps = Math.round(1000 / (now - lastFrameTime));
-            lastFrameTime = now;
-            document.getElementById('fpsCounter').textContent = `FPS: ${fps}`;
-        }
+            // Draw tracked vehicles
+            for (let [id, tracked] of trackedVehicles.entries()) {
+                if (tracked.framesMissing < 5) { // Only draw recently seen vehicles
+                    const { bbox, type, confidence } = tracked;
 
-        async function processFrame() {
-            if (!isProcessing || isPaused) {
-                if (isProcessing && isPaused) {
-                    animationId = requestAnimationFrame(processFrame);
+                    // Color based on vehicle type
+                    const colors = {
+                        car: '#00ff00',
+                        bus: '#ff00ff',
+                        truck: '#00ffff',
+                        motorcycle: '#ffff00'
+                    };
+
+                    const color = colors[type] || '#00ff00';
+
+                    // Draw bounding box
+                    ctx.strokeStyle = color;
+                    ctx.lineWidth = 3;
+                    ctx.strokeRect(bbox.x, bbox.y, bbox.width, bbox.height);
+
+                    // Draw label background
+                    const label = `${type} #${id} ${(confidence * 100).toFixed(0)}%`;
+                    ctx.font = 'bold 16px Arial';
+                    const textWidth = ctx.measureText(label).width;
+                    
+                    ctx.fillStyle = color;
+                    ctx.fillRect(bbox.x, bbox.y - 25, textWidth + 10, 25);
+
+                    // Draw label text
+                    ctx.fillStyle = '#000';
+                    ctx.fillText(label, bbox.x + 5, bbox.y - 7);
                 }
-                return;
             }
 
-            try {
-                updateTracking();
-                const detections = await detectVehiclesInFrame();
-                drawDetections(detections);
-                updateStats();
-                updateFPS();
+            // Update FPS
+            frameCount++;
+            const now = Date.now();
+            if (now - lastFpsUpdate >= 1000) {
+                fps = Math.round(frameCount * 1000 / (now - lastFpsUpdate));
+                frameCount = 0;
+                lastFpsUpdate = now;
+                document.getElementById('fpsCounter').textContent = `FPS: ${fps}`;
+            }
 
-                if (!videoElement.paused && !videoElement.ended) {
-                    animationId = requestAnimationFrame(processFrame);
-                } else if (videoElement.ended) {
-                    showStatus('✅ Processing complete!', 'success');
-                    document.getElementById('controls').classList.remove('active');
-                }
-            } catch (error) {
-                console.error('Frame processing error:', error);
+            // Continue animation loop
+            if (isProcessing && !isPaused) {
+                animationId = requestAnimationFrame(drawFrame);
             }
         }
 
@@ -724,17 +713,31 @@
             updateStats();
         }
 
-        async function startProcessing(videoSrc) {
+        async function startProcessing(source, sourceType = 'video') {
             if (isProcessing) {
-                stopProcessing();
+                await stopProcessing();
             }
 
             resetTracking();
             isProcessing = true;
             isPaused = false;
+            isWebcam = (sourceType === 'webcam');
 
-            videoElement.src = videoSrc;
-            
+            if (sourceType === 'webcam') {
+                try {
+                    stream = await navigator.mediaDevices.getUserMedia({ 
+                        video: { width: 1280, height: 720 } 
+                    });
+                    videoElement.srcObject = stream;
+                } catch (error) {
+                    showStatus('❌ Could not access webcam. Please grant permission.', 'error');
+                    return;
+                }
+            } else {
+                videoElement.srcObject = null;
+                videoElement.src = source;
+            }
+
             await new Promise((resolve) => {
                 videoElement.onloadedmetadata = () => {
                     canvas.width = videoElement.videoWidth;
@@ -747,37 +750,58 @@
             document.getElementById('statsContainer').classList.add('active');
             document.getElementById('controls').classList.add('active');
             
-            if (modelLoaded) {
-                showStatus('🎬 Processing video with AI model...', 'info');
-            } else {
-                showStatus('🎬 Processing video with simulated detection (model not loaded)...', 'warning');
-            }
+            showStatus('🎬 Processing ' + (isWebcam ? 'webcam' : 'video') + '... AI is detecting vehicles!', 'info');
 
-            videoElement.play();
-            processFrame();
+            await videoElement.play();
+            
+            // Start both loops
+            drawFrame();
+            detectVehicles();
         }
 
-        function stopProcessing() {
+        async function stopProcessing() {
             isProcessing = false;
+            
             if (animationId) {
                 cancelAnimationFrame(animationId);
+                animationId = null;
             }
+            
+            if (detectionTimeout) {
+                clearTimeout(detectionTimeout);
+                detectionTimeout = null;
+            }
+
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+
             if (videoElement) {
                 videoElement.pause();
+                videoElement.srcObject = null;
             }
+
+            document.getElementById('videoContainer').classList.remove('active');
+            document.getElementById('controls').classList.remove('active');
         }
 
         // Event Listeners
+        document.getElementById('webcamBtn').addEventListener('click', async () => {
+            await startProcessing(null, 'webcam');
+        });
+
         document.getElementById('demoBtn').addEventListener('click', async () => {
-            const sampleVideo = 'https://www.w3schools.com/html/mov_bbb.mp4';
-            await startProcessing(sampleVideo);
+            // Using a sample video with traffic
+            const sampleVideo = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4';
+            await startProcessing(sampleVideo, 'video');
         });
 
         document.getElementById('videoInput').addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if (file) {
                 const videoURL = URL.createObjectURL(file);
-                await startProcessing(videoURL);
+                await startProcessing(videoURL, 'video');
             }
         });
 
@@ -788,23 +812,30 @@
             if (isPaused) {
                 videoElement.pause();
                 btn.textContent = '▶ Resume';
+                showStatus('⏸ Paused', 'info');
             } else {
                 videoElement.play();
                 btn.textContent = '⏸ Pause';
-                processFrame();
+                showStatus('▶ Resumed', 'info');
+                drawFrame();
+                detectVehicles();
             }
         });
 
-        document.getElementById('resetBtn').addEventListener('click', () => {
-            stopProcessing();
-            resetTracking();
-            videoElement.currentTime = 0;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            showStatus('🔄 Reset complete. Ready for new video.', 'info');
+        document.getElementById('stopBtn').addEventListener('click', async () => {
+            await stopProcessing();
+            showStatus('⏹ Stopped', 'info');
         });
 
-        // Initialize
-        loadModel();
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            resetTracking();
+            showStatus('🔄 Counts reset', 'success');
+        });
+
+        // Initialize - Load model on page load
+        window.addEventListener('load', () => {
+            loadModel();
+        });
     </script>
 </body>
 </html>
