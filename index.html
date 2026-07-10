@@ -1,11 +1,343 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Rosalink Apps</title>
-  <!-- PASTE YOUR NEW GOOGLE SEARCH CONSOLE HTML TAG ON THE LINE BELOW -->
-  <meta name="google-site-verification" content="Zg6evyfXUVV6z2MTHwlPzykeRfcXIBe7qUUJNZGyUBs" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Revyncs — AI Solutions</title>
+<meta name="description" content="Revyncs builds practical AI-powered products. Our first product, IELTS BD, helps Bangladeshi learners prepare for IELTS-style English tests with adaptive practice and AI feedback." />
+<!-- PASTE YOUR NEW GOOGLE SEARCH CONSOLE HTML TAG ON THE LINE BELOW -->
+<meta name="google-site-verification" content="Zg6evyfXUVV6z2MTHwlPzykeRfcXIBe7qUUJNZGyUBs" />
+<style>
+  :root{
+    --ink:#111827;
+    --muted:#6b7280;
+    --line:#e5e7eb;
+    --bg:#ffffff;
+    --panel:#f8fafc;
+    --accent:#4f46e5;
+    --accent2:#06b6d4;
+    --radius:16px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Segoe UI', system-ui, -apple-system, Roboto, Arial, sans-serif;
+    color:var(--ink);
+    background:var(--bg);
+    line-height:1.6;
+  }
+  a{color:inherit;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
+
+  header{
+    padding:24px 0;
+    border-bottom:1px solid var(--line);
+  }
+  header .wrap{display:flex;align-items:center;justify-content:space-between;}
+  .brand{display:flex;align-items:center;gap:10px;}
+  .brand svg{display:block;}
+  nav a{
+    margin-left:28px;
+    text-decoration:none;
+    font-size:15px;
+    font-weight:500;
+    color:var(--muted);
+  }
+  nav a:hover{color:var(--ink);}
+
+  .hero{
+    padding:88px 0 72px;
+    text-align:center;
+  }
+  .eyebrow{
+    display:inline-block;
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--accent);
+    background:#eef2ff;
+    padding:6px 14px;
+    border-radius:999px;
+    margin-bottom:22px;
+  }
+  h1{
+    font-size:44px;
+    line-height:1.15;
+    margin:0 0 18px;
+    letter-spacing:-.02em;
+  }
+  h1 span{
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  .lead{
+    font-size:19px;
+    color:var(--muted);
+    max-width:640px;
+    margin:0 auto 34px;
+  }
+  .cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+  .btn{
+    display:inline-block;
+    padding:13px 26px;
+    border-radius:10px;
+    font-weight:600;
+    font-size:15px;
+    text-decoration:none;
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .btn-primary{
+    background:var(--ink);
+    color:#fff;
+  }
+  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(17,24,39,.18);}
+  .btn-secondary{
+    background:var(--panel);
+    color:var(--ink);
+    border:1px solid var(--line);
+  }
+  .btn-secondary:hover{transform:translateY(-1px);}
+
+  section{padding:64px 0;}
+  section.alt{background:var(--panel);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  .section-head{text-align:center;max-width:640px;margin:0 auto 44px;}
+  .section-head h2{font-size:30px;margin:0 0 12px;letter-spacing:-.01em;}
+  .section-head p{color:var(--muted);font-size:16px;margin:0;}
+
+  .pillars{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+  }
+  .pillar{
+    padding:26px;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    background:#fff;
+  }
+  .pillar .icon{
+    width:40px;height:40px;
+    border-radius:10px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    margin-bottom:16px;
+  }
+  .pillar h3{font-size:17px;margin:0 0 8px;}
+  .pillar p{font-size:14.5px;color:var(--muted);margin:0;}
+
+  .product-card{
+    display:flex;
+    gap:36px;
+    align-items:center;
+    padding:36px;
+    border:1px solid var(--line);
+    border-radius:20px;
+    background:#fff;
+  }
+  .product-logo{
+    flex:0 0 220px;
+  }
+  .product-logo img{
+    width:100%;
+    height:auto;
+    border-radius:12px;
+  }
+  .product-body{flex:1;min-width:0;}
+  .product-tag{
+    display:inline-block;
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    color:var(--accent2);
+    background:#ecfeff;
+    padding:4px 10px;
+    border-radius:999px;
+    margin-bottom:12px;
+  }
+  .product-body h3{font-size:24px;margin:0 0 10px;}
+  .product-body p{color:var(--muted);font-size:15.5px;margin:0 0 18px;}
+  .feature-list{
+    list-style:none;
+    padding:0;margin:0 0 22px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px 20px;
+  }
+  .feature-list li{
+    font-size:14px;
+    color:var(--ink);
+    padding-left:20px;
+    position:relative;
+  }
+  .feature-list li::before{
+    content:"";
+    position:absolute;left:0;top:7px;
+    width:7px;height:7px;
+    border-radius:2px;
+    background:var(--accent);
+  }
+  .product-links a{
+    margin-right:14px;
+    font-size:14.5px;
+    font-weight:600;
+    text-decoration:none;
+    color:var(--accent);
+  }
+  .product-links a:hover{text-decoration:underline;}
+
+  .roadmap{
+    border:1px dashed var(--line);
+    border-radius:var(--radius);
+    padding:30px;
+    text-align:center;
+    margin-top:24px;
+    color:var(--muted);
+  }
+  .roadmap strong{color:var(--ink);}
+
+  footer{
+    padding:36px 0;
+    border-top:1px solid var(--line);
+  }
+  footer .wrap{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+  }
+  footer .fbrand{
+    display:flex;align-items:center;gap:8px;
+    font-weight:700;
+    font-size:15px;
+  }
+  footer .fbrand svg{width:22px;height:22px;}
+  footer p{margin:0;color:var(--muted);font-size:13.5px;}
+
+  @media (max-width: 760px){
+    h1{font-size:32px;}
+    .pillars{grid-template-columns:1fr;}
+    .product-card{flex-direction:column;}
+    .product-logo{flex-basis:auto;width:160px;}
+    .feature-list{grid-template-columns:1fr;}
+  }
+</style>
 </head>
 <body>
-  <h1>Rosalink App Directory</h1>
+
+<header>
+  <div class="wrap">
+    <div class="brand">
+      <svg width="140" height="34" viewBox="0 0 220 56" xmlns="http://www.w3.org/2000/svg" aria-label="Revyncs logo">
+        <defs>
+          <linearGradient id="rvMark" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#4F46E5"/>
+            <stop offset="100%" stop-color="#06B6D4"/>
+          </linearGradient>
+        </defs>
+        <rect x="0" y="4" width="48" height="48" rx="14" fill="url(#rvMark)"/>
+        <path d="M14 38 V18 h11.5 c5 0 8.5 3.2 8.5 7.6 0 3.4-2 5.9-5.1 6.9 L34 38 h-6.4 l-4.4-7.9 h-3.1 V38 Z M20.1 25.6 h4.8 c2.4 0 3.9-1.2 3.9-3.1 0-1.9-1.5-3-3.9-3 h-4.8 Z" fill="#fff"/>
+        <circle cx="34.5" cy="16" r="3.2" fill="#fff" opacity="0.9"/>
+        <text x="60" y="36" font-family="'Segoe UI', Arial, sans-serif" font-size="26" font-weight="700" fill="#111827">Revyncs</text>
+      </svg>
+    </div>
+    <nav>
+      <a href="#products">Products</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <span class="eyebrow">AI Solutions Studio</span>
+    <h1>We build <span>AI-powered products</span><br/>for real problems.</h1>
+    <p class="lead">Revyncs is a technology brand building a family of practical AI products — starting with education, expanding into new domains over time.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#products">Explore Products</a>
+      <a class="btn btn-secondary" href="#about">About Revyncs</a>
+    </div>
+  </div>
+</section>
+
+<section id="products">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Our Products</h2>
+      <p>Each Revyncs product applies AI to a specific, everyday problem.</p>
+    </div>
+
+    <div class="product-card">
+      <div class="product-logo">
+        <img src="assets/ielts-bd-logo.jpg" alt="IELTS BD logo" />
+      </div>
+      <div class="product-body">
+        <span class="product-tag">Product 01 · Education</span>
+        <h3>IELTS BD — English Practice</h3>
+        <p>IELTS-style practice with AI feedback, in English with optional Bengali help. An adaptive study companion built for Bangladeshi learners preparing for IELTS-style English tests.</p>
+        <ul class="feature-list">
+          <li>10-minute adaptive placement per skill</li>
+          <li>AI feedback on Writing &amp; Speaking</li>
+          <li>Bengali help available on tap</li>
+          <li>41+ snack-sized practice units</li>
+          <li>Spaced-repetition vocabulary trainer</li>
+          <li>Streaks, XP, and band-trend dashboard</li>
+        </ul>
+        <div class="product-links">
+          <a href="https://github.com/MdNakib/IELTS_App" target="_blank" rel="noopener">GitHub Repository</a>
+          <a href="https://github.com/MdNakib/IELTS_App/actions" target="_blank" rel="noopener">Download Latest Build</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="roadmap">
+      <strong>More Revyncs products are on the way.</strong> We're expanding beyond education into other AI-driven tools — check back soon.
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="about">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>About Revyncs</h2>
+      <p>An AI solutions brand building a portfolio of focused, useful tech products.</p>
+    </div>
+    <div class="pillars">
+      <div class="pillar">
+        <div class="icon"></div>
+        <h3>AI-First</h3>
+        <p>Every Revyncs product uses AI as core functionality, not a bolt-on feature — from adaptive learning to automated feedback.</p>
+      </div>
+      <div class="pillar">
+        <div class="icon"></div>
+        <h3>Multi-Product</h3>
+        <p>Revyncs isn't a single app — it's a growing family of independent tech products, each solving one problem well.</p>
+      </div>
+      <div class="pillar">
+        <div class="icon"></div>
+        <h3>Built for Real Users</h3>
+        <p>We design for specific communities and use cases first — starting with Bangladeshi English learners preparing for IELTS.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="wrap">
+    <div class="fbrand">
+      <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect x="0" y="0" width="48" height="48" rx="14" fill="#4F46E5"/>
+        <path d="M14 38 V18 h11.5 c5 0 8.5 3.2 8.5 7.6 0 3.4-2 5.9-5.1 6.9 L34 38 h-6.4 l-4.4-7.9 h-3.1 V38 Z M20.1 25.6 h4.8 c2.4 0 3.9-1.2 3.9-3.1 0-1.9-1.5-3-3.9-3 h-4.8 Z" fill="#fff"/>
+      </svg>
+      Revyncs
+    </div>
+    <p>&copy; 2026 Revyncs. All rights reserved.</p>
+  </div>
+</footer>
+
 </body>
 </html>
